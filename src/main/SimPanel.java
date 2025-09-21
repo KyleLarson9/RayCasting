@@ -17,7 +17,7 @@ public class SimPanel extends JPanel {
 	
 		setPanelSize();
 		
-		this.setBackground(Color.DARK_GRAY);
+		this.setBackground(Color.BLACK);
 	}
 	
 	public void paintComponent(Graphics g) {
