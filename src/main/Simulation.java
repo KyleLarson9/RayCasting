@@ -2,12 +2,15 @@ package main;
 
 import java.awt.Graphics2D;
 
+import inputs.MouseInputs;
 import objects.Source;
 
 public class Simulation implements Runnable {
 
 	private SimFrame frame;
 	private SimPanel panel;
+	
+	private MouseInputs mouseInputs;
 	
 	private Thread thread;
 	
@@ -28,11 +31,6 @@ public class Simulation implements Runnable {
 	public Simulation() {
 		initializeClasses();
 		
-		panel = new SimPanel(this);
-		frame = new SimFrame(panel);
-		panel.setFocusable(true);
-		panel.requestFocus();
-		
 		startSimLoop();
 	}
 	
@@ -46,8 +44,16 @@ public class Simulation implements Runnable {
 	
 	private void initializeClasses() {
 		
+		panel = new SimPanel(this);
+		frame = new SimFrame(panel);
+		panel.setFocusable(true);
+		panel.requestFocus();
+				
 		source = new Source(SIM_WIDTH/2 - sourceRadius/2, SIM_HEIGHT/2 - sourceRadius/2, sourceRadius);
 		
+		mouseInputs = new MouseInputs(source);
+		panel.addMouseListener(mouseInputs);
+		panel.addMouseMotionListener(mouseInputs);
 	}
 	
 	private void startSimLoop() {
