@@ -2,6 +2,8 @@ package main;
 
 import java.awt.Graphics2D;
 
+import objects.Source;
+
 public class Simulation implements Runnable {
 
 	private SimFrame frame;
@@ -20,6 +22,9 @@ public class Simulation implements Runnable {
 	private final static int SIM_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
 	private final static int SIM_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;	
 	
+	private Source source;
+	private double sourceRadius = 20 * SCALE;
+	
 	public Simulation() {
 		initializeClasses();
 		
@@ -32,14 +37,16 @@ public class Simulation implements Runnable {
 	}
 	
 	private void update() {
-		
+		source.update();
 	}
 	
 	public void render(Graphics2D g2d) {
-		
+		source.render(g2d);
 	}
 	
 	private void initializeClasses() {
+		
+		source = new Source(SIM_WIDTH/2 - sourceRadius/2, SIM_HEIGHT/2 - sourceRadius/2, sourceRadius);
 		
 	}
 	
