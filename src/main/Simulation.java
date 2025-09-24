@@ -1,9 +1,11 @@
 package main;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import inputs.MouseInputs;
 import objects.Source;
+import objects.Wall;
 
 public class Simulation implements Runnable {
 
@@ -13,6 +15,9 @@ public class Simulation implements Runnable {
 	private MouseInputs mouseInputs;
 	
 	private Thread thread;
+	
+	private Source source;
+
 	
 	private final int FPS = 120;
 	private final int UPS = 200;
@@ -25,8 +30,11 @@ public class Simulation implements Runnable {
 	private final static int SIM_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
 	private final static int SIM_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;	
 	
-	private Source source;
 	private double sourceRadius = 20 * SCALE;
+	
+	private double boundaryWallOffset = 40 * SCALE;
+	
+	private ArrayList<Wall> walls = new ArrayList<>();
 	
 	public Simulation() {
 		initializeClasses();
@@ -40,6 +48,12 @@ public class Simulation implements Runnable {
 	
 	public void render(Graphics2D g2d) {
 		source.render(g2d);
+		
+		
+		for(Wall wall : walls) {
+			wall.draw(g2d);
+		}
+		
 	}
 	
 	private void initializeClasses() {
@@ -54,6 +68,24 @@ public class Simulation implements Runnable {
 		mouseInputs = new MouseInputs(source);
 		panel.addMouseListener(mouseInputs);
 		panel.addMouseMotionListener(mouseInputs);
+		
+		initializeBoundaryWalls();
+	}
+	
+	private void initializeBoundaryWalls() {
+		
+		// top wall		
+		walls.add(new Wall(0 + boundaryWallOffset, 0 + boundaryWallOffset, SIM_WIDTH - boundaryWallOffset, 0 + boundaryWallOffset));
+		
+		// bottom wall
+		walls.add(new Wall(0 + boundaryWallOffset, SIM_HEIGHT - boundaryWallOffset, SIM_WIDTH - boundaryWallOffset, SIM_HEIGHT - boundaryWallOffset));
+		
+		// left wall
+		walls.add(new Wall(0 + boundaryWallOffset, 0 + boundaryWallOffset, 0 + boundaryWallOffset, SIM_HEIGHT - boundaryWallOffset));
+		
+		// right wall
+		walls.add(new Wall(SIM_WIDTH - boundaryWallOffset, 0 + boundaryWallOffset, SIM_WIDTH - boundaryWallOffset, SIM_HEIGHT - boundaryWallOffset));
+		
 	}
 	
 	private void startSimLoop() {
