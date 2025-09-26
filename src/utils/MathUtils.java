@@ -8,27 +8,35 @@ public class MathUtils {
 		
 	}
 	
-	public static Point2D.Double calculateIntersection(double x1, double y1, double x2, double y2,
+	// fix my version  -- needs to be fixed
+	public Point2D.Double calculateIntersection(double x1, double y1, double x2, double y2,
 												double x3, double y3, double x4, double y4) {
-				
-		double delX1 = x2-x1;
-		double delX2 = x4-x3;
-		double delY1 = y2-y1;
-		double delY2 = y4-y2;
 		
-		double denominator = delX2*delY1 - delX1*delY2;
+		double delX1 = x2 - x1;
+		double delY1 = y2 - y1;
+		double delX2 = x4 - x3;
+		double delY2 = y4 - y3;
+	
+		double denominator = (delX2*delY1) - (delX1*delY2);
 		
-		if(denominator == 0) { // lines are parallel
+		if(denominator == 0) {
 			return null;
 		}
 		
-		double t = -delY2*(x3-x1) + delX2*(y3-y1);
-		double u = -delY1*(x3-x1) + delX1*(y3-y1);
+		double t = (delX2*(y3-y1) - delY2*(x3-x1))/denominator;
+		double u = (delX1*(y3-y1) - delY1*(x3-x1))/denominator;
 		
-		double intersectionX = x1 + t*(x2-x1);
-		double intersectionY = y1 + u*(y2-y1);
+		if(t >= 0 && u >= 0 && u <= 1) {
+			double intersectionX = x1 + t*delX1;
+			double intersectionY = y1 + t*delY1;
+			
+			return new Point2D.Double(intersectionX, intersectionY);
+		}
 		
-		return new Point2D.Double(intersectionX, intersectionY);
+		return null;
+		
 	}
+	
+
 	
 }
