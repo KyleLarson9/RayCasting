@@ -58,9 +58,7 @@ public class Simulation implements Runnable {
 		for(Wall wall : walls) {
 			wall.draw(g2d);
 		}
-		
-		polygon.draw(g2d);
-		
+				
 	}
 	
 	private void initializeClasses() {
