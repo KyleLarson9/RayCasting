@@ -3,35 +3,73 @@ package objects;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Polygon {
 
 	private double x, y;
-	private double width, height;
+	private double radius;
+	private int sides;
 	
-	public Polygon(double x, double y, double width, double height) {
+	private Line2D.Double[] lines;
+	
+	public Polygon(double x, double y, double radius, int sides) {
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.radius = radius;
+		this.sides = sides;
+		this.lines = new Line2D.Double[sides];
+		
+		createPolygon();
+
 	}
 	
 	public void draw(Graphics2D g2d) {
 		g2d.setColor(Color.red);
-		g2d.fillRect((int) x, (int) y, (int) width, (int) height);
+
+		for(Line2D line : lines) {
+			g2d.drawLine((int) line.getX1(), (int) line.getY1(), (int) line.getX2(), (int) line.getY2());
+		}
+	}
+	
+	private void createPolygon() {
+		
+		double deltaAngle = Math.toRadians(360/sides); 
+		
+		// Calculte polygon points
+		Point2D.Double[] points = new Point2D.Double[sides];
+		
+		for(int i = 0; i < sides; i++) {
+			double angle = i * deltaAngle;
+			
+			double endX = x + Math.cos(angle + Math.toRadians(45)) * radius;
+			double endY = y + Math.sin(angle + Math.toRadians(45)) * radius;
+			
+			points[i] = new Point2D.Double(endX, endY);
+		}
+		
+		// Build polygon lines
+		for(int i = 0; i < points.length; i++) {
+			Point2D.Double point1 = points[i];
+			Point2D.Double point2 = points[(i + 1) % sides]; // wrap to first point at the end
+			
+		
+			lines[i] = new Line2D.Double(point1.x, point1.y, point2.x, point2.y);
+		}
+		
+	}
+	
+	public void addLineComponentsToWalls(ArrayList<Wall> walls) {
+		
+		for(Line2D.Double line : lines) {
+			walls.add(new Wall(line.getX1(), line.getY1(), line.getX2(), line.getY2()));
+		}
+		
 	}
 	
 	public Line2D.Double[] getLineComponents() {
-		
-		Line2D.Double[] lines = new Line2D.Double[4];
-		lines[0] = new Line2D.Double(x, y, x + width, y);
-	    // Right
-	    lines[1] = new Line2D.Double(x + width, y, x + width, y + height);
-	    // Bottom
-	    lines[2] = new Line2D.Double(x + width, y + height, x, y + height);
-	    // Left
-	    lines[3] = new Line2D.Double(x, y + height, x, y);
-	    
+		   
 	    return lines;
 	}
 	
