@@ -15,9 +15,7 @@ public class Source {
 	private double x, y;
 	private double radius;
 	
-	private double maxRayLength = 1000;
-	private double currentRayLength = 0 + 10000;
-	private double growthSpeed = 1;
+	private double initialRayLength = 10000;
 	
 	private double totalRays = 100;
 	
@@ -35,12 +33,12 @@ public class Source {
 		
 	}
 	
-	public void render(Graphics2D g2d) {
-		g2d.setColor(Color.white);
-		g2d.fillOval((int) (x - radius), (int) (y - radius), (int) radius*2, (int) radius*2);
-		
+	public void render(Graphics2D g2d) {		
 		rays(g2d);
 		
+		g2d.setColor(Color.orange);
+		g2d.fillOval((int) (x - radius), (int) (y - radius), (int) radius*2, (int) radius*2);
+
 	}
 	
 	// fix mine
@@ -59,8 +57,8 @@ public class Source {
 			Point2D.Double closestPoint = null;
 			double closestDistance = Double.MAX_VALUE;
 
-			double rayEndX = x + Math.cos(angle) * currentRayLength;
-			double rayEndY = y + Math.sin(angle) * currentRayLength;
+			double rayEndX = x + Math.cos(angle) * initialRayLength;
+			double rayEndY = y + Math.sin(angle) * initialRayLength;
 						
 			// Loop through each wall and calculate its intersection point
 			for(Wall wall : sim.getWalls()) {
@@ -88,45 +86,6 @@ public class Source {
 		}
 		
 	}
-	
-	
-	// fixed by chatgpt -- understand why mine didn't work next
-//	public void rays(Graphics2D g2d) {
-//        int totalAngle = 360;
-//        double angularSeparation = Math.toRadians(totalAngle / totalRays);
-//
-//        for (double angle = 0; angle < Math.toRadians(totalAngle); angle += angularSeparation) {
-//            g2d.setColor(Color.white);
-//
-//            Point2D.Double closest = null;
-//            double minDist = Double.MAX_VALUE;
-//
-//            double rayEndX = x + Math.cos(angle) * currentRayLength;
-//            double rayEndY = y + Math.sin(angle) * currentRayLength;
-//
-//            for (Wall wall : sim.getWalls()) {
-//                Point2D.Double point = mathUtils.calculateIntersection(
-//                        x, y, rayEndX, rayEndY,
-//                        wall.getX1(), wall.getY1(),
-//                        wall.getX2(), wall.getY2()
-//                );
-//
-//                if (point != null) {
-//                    double dist = point.distance(x, y);
-//                    if (dist < minDist) {
-//                        minDist = dist;
-//                        closest = point;
-//                    }
-//                }
-//            }
-//
-//            if (closest == null) {
-//                closest = new Point2D.Double(rayEndX, rayEndY);
-//            }
-//
-//            g2d.drawLine((int) x, (int) y, (int) closest.x, (int) closest.y);
-//        }
-//	}
 	
 	public double getX() {
 		return x;
